@@ -11,12 +11,12 @@ namespace LuceneProject
         
         private void Run()
         {
-            var basePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var indexPath = Path.Combine(basePath, "dataset");
+            //Path
+            string datasetFilePath = Path.GetFullPath(@"C:\Users\Nick\Source\Repos\Nick-v1\LuceneProject\Dataset\2022-sp.csv");
+            //All text from dataset
+            string text = File.ReadAllText(datasetFilePath);
 
-            using var dir = FSDirectory.Open(indexPath);
-
-            Console.WriteLine(dir);
+            
         }
 
 
@@ -30,7 +30,10 @@ namespace LuceneProject
 
 
 
-
+        /// <summary>
+        /// Entry point
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             var self = new Program();
