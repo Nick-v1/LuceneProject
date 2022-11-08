@@ -1,16 +1,15 @@
 ﻿using Lucene.Net.Store;
 using Lucene.Net.Util;
-using Lucene.Net.Analysis;
-using Lucene.Net.Search;
 using System;
 using System.IO;
 using Lucene.Net.Index;
+using Lucene.Net.Analysis.Standard;
 
 namespace LuceneProject
 {
     class Program
     {
-        const LuceneVersion AppLuceneVersion = LuceneVersion.LUCENE_48;
+        //const LuceneVersion AppLuceneVersion = LuceneVersion.LUCENE_48;
         //Dataset path
         static readonly string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Dataset\2022-sp.csv");
         static readonly string datasetFile = Path.GetFullPath(path);
@@ -18,10 +17,9 @@ namespace LuceneProject
         private void Run()
         {
             fileCheck(datasetFile);
-
-
+            
             //All text from dataset
-            //string text = File.ReadAllText(datasetFilePath);
+            string text = File.ReadAllText(datasetFile);
             //string[] lines = File.ReadAllLines(datasetFilePath);
 
 
