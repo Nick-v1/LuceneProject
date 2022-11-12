@@ -28,6 +28,7 @@ namespace LuceneProject
         }
 
         public void AddCoursesToIndex(IEnumerable<Course> courses) {
+
             foreach (var course in courses) {
                 var document = new Document();
                 document.Add(new StringField("Guid", course.Guid.ToString(), Field.Store.YES)); //id for index

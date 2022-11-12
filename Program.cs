@@ -4,26 +4,35 @@ using System;
 using System.IO;
 using Lucene.Net.Index;
 using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Search;
+using Lucene.Net.Documents;
+using Lucene.Net.Analysis.Core;
 
 namespace LuceneProject
 {
     class Program
     {
-        //const LuceneVersion AppLuceneVersion = LuceneVersion.LUCENE_48;
+        const LuceneVersion AppLuceneVersion = LuceneVersion.LUCENE_48;
         //Dataset path
         static readonly string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Dataset\2022-sp.csv");
         static readonly string datasetFile = Path.GetFullPath(path);
+        static string indexPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Index"));
+        
 
         private void Run()
         {
             fileCheck(datasetFile);
-            
+
             //All text from dataset
-            string text = File.ReadAllText(datasetFile);
+            //string text = File.ReadAllText(datasetFile);
             //string[] lines = File.ReadAllLines(datasetFilePath);
+            var index = new Indexer(datasetFile);
+            index.testing();
 
+            
 
-
+            Console.WriteLine();
+           
         }
 
 
