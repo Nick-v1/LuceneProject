@@ -3,7 +3,9 @@ using Lucene.Net.Analysis.Core;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Analysis.TokenAttributes;
 using Lucene.Net.Analysis.Util;
+using Lucene.Net.Documents;
 using Lucene.Net.Index;
+using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
 using System;
@@ -29,35 +31,84 @@ namespace LuceneProject
             "such",
             "that", "the", "their", "then", "there", "these", "they", "this", "to",
             "was", "were", "will", "with"};
+        private readonly string indexPath;
+        private readonly string datasetFile;
         private readonly StandardAnalyzer _standardAnalyzer;
-        private readonly RAMDirectory _directory;
+        private readonly FSDirectory _directory;
         private readonly IndexWriterConfig _indexWriterConfig;
         private readonly IndexWriter _writer;
-        private readonly CharArraySet StopWordSet;
-        private readonly TokenStream tokenStream;
-        private readonly IOffsetAttribute offsetAtt;
+        private TokenStream tokenStream;
+        private IOffsetAttribute offsetAtt;
+        private ICharTermAttribute termAtt;
 
-        public Indexer(string datasetfile)
+        public Indexer(string datasetfile, string indexPath)
         {
-            _standardAnalyzer = new StandardAnalyzer(version);
-            _directory = new RAMDirectory();
-            _indexWriterConfig = new IndexWriterConfig(version, _standardAnalyzer);
-            _writer = new IndexWriter(_directory, _indexWriterConfig);
-            StopWordSet = _standardAnalyzer.StopwordSet;
-            tokenStream = _standardAnalyzer.GetTokenStream("alltokens", new StringReader(File.ReadAllText(datasetfile)));
-            offsetAtt = tokenStream.AddAttribute<IOffsetAttribute>();
+            this.indexPath = indexPath;
+            this.datasetFile = datasetfile;
+            this._standardAnalyzer = new StandardAnalyzer(version);
+            this._directory = FSDirectory.Open(indexPath);
         }
 
+        public void myTokenizer() {
+            tokenStream = _standardAnalyzer.GetTokenStream("alltokens", File.ReadAllText(datasetFile));
+            offsetAtt = tokenStream.AddAttribute<IOffsetAttribute>();
+            termAtt = tokenStream.AddAttribute<ICharTermAttribute>();
+        }
+
+        public void CreateIndex()
+        {
+            using var dir = _directory;
+            //Adds a field to index;
+            //document.Add(new StringField("Year", "2022", Field.Store.YES));
+           /* using var dir = FSDirectory.Open(indexPath);
+
+            var indexConfig = new IndexWriterConfig(version, _standardAnalyzer);
+
+            using var writer = new IndexWriter(dir, indexConfig);
+
+
+            var doc = new Document();
+            doc.Add(new TextField("testfield", "stringvalue", Field.Store.YES));
+            writer.AddDocument(doc);
+            writer.Flush(triggerMerge: true, applyAllDeletes: true);*/
+
+        }
         public void testing() {
-            tokenStream.Reset();
-            while (tokenStream.IncrementToken()) {
-                Console.WriteLine("token: " + tokenStream.ReflectAsString(true));
-                Console.WriteLine("token start offset: " + offsetAtt.StartOffset);
-                Console.WriteLine("  token end offset: " + offsetAtt.EndOffset);
+            try
+            {
+                tokenStream.Reset();
+                while (tokenStream.IncrementToken())
+                {
+                    Console.WriteLine("token: " + tokenStream.ReflectAsString(true));
+                    Console.WriteLine("Term: " +termAtt.ToString());
+                    Console.WriteLine("token start offset: " + offsetAtt.StartOffset);
+                    Console.WriteLine("  token end offset: " + offsetAtt.EndOffset);
+                }
+                //Console.WriteLine($"Standard analyzer stop word set: {StopWordSet}");
+                tokenStream.End();
             }
-            //Console.WriteLine($"Standard analyzer stop word set: {StopWordSet}");
-            tokenStream.End();
-            tokenStream.Dispose();
+            finally
+            {
+                tokenStream.Dispose();
+            }
+        }
+
+        public void addToIndex()
+        {
+            try
+            {
+                tokenStream.Reset();
+                var document = new Document();
+                while (tokenStream.IncrementToken()) {
+                    document.Add(new TextField("testing_term", termAtt.ToString(),Field.Store.NO));
+                }
+                
+            }
+            finally
+            {
+                _writer.Commit();
+                _writer.Flush(triggerMerge: true, applyAllDeletes: false);
+            }
         }
     }
 }

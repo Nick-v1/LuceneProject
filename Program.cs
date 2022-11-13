@@ -1,12 +1,6 @@
-﻿using Lucene.Net.Store;
-using Lucene.Net.Util;
+﻿using Lucene.Net.Util;
 using System;
 using System.IO;
-using Lucene.Net.Index;
-using Lucene.Net.Analysis.Standard;
-using Lucene.Net.Search;
-using Lucene.Net.Documents;
-using Lucene.Net.Analysis.Core;
 
 namespace LuceneProject
 {
@@ -22,14 +16,14 @@ namespace LuceneProject
         private void Run()
         {
             fileCheck(datasetFile);
-
-            //All text from dataset
-            //string text = File.ReadAllText(datasetFile);
-            //string[] lines = File.ReadAllLines(datasetFilePath);
-            var index = new Indexer(datasetFile);
-            index.testing();
-
             
+
+
+
+            var index = new Indexer(datasetFile, indexPath);
+            index.myTokenizer();
+            index.testing();
+            //index.CreateIndex();
 
             Console.WriteLine();
            
