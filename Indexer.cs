@@ -5,6 +5,7 @@ using Lucene.Net.Analysis.TokenAttributes;
 using Lucene.Net.Analysis.Util;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
+using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
@@ -20,95 +21,121 @@ namespace LuceneProject
     public class Indexer
     {
         private const LuceneVersion version = LuceneVersion.LUCENE_48;
-        private static string[] StopWordList = {
-            "a", "an", "and", "are", "as", "at",
-            "be", "but", "by",
-            "for", "from",
-            "has", "he",
-            "if", "in", "into", "is", "it", "its",
-            "no", "not",
-            "of", "on", "or",
-            "such",
-            "that", "the", "their", "then", "there", "these", "they", "this", "to",
-            "was", "were", "will", "with"};
-        private readonly string indexPath;
-        private readonly string datasetFile;
-        private readonly StandardAnalyzer _standardAnalyzer;
-        private readonly FSDirectory _directory;
-        private readonly IndexWriterConfig _indexWriterConfig;
-        private readonly IndexWriter _writer;
-        private TokenStream tokenStream;
+        
+        private readonly string year = "2022";
+        private readonly string yearterm = "2022-sp";
+        private readonly string[] subject = { "AAS" , "ABE", "ACCY", "ACE", "ACES", "ADV", "AE", "AFAS", "AFRO", "AFST",
+        "AGCM", "AGED", "AHS", "AIS", "ALEC", "ANSC", "ANTH", "ARAB", "ARCH", "ART", "ARTD", "ARTE", "ARTF", "ARTH", "ARTJ",
+        "ARTS", "ASRM", "ASST", "ASTR", "ATMS", "BADM", "BCOG", "BCS", "BDI", "BIOC", "BIOE", "BIOL", "BIOP", "BSE", "BTW",
+        "BUS", "CB", "CDB", "CEE", "CHBE", "CHEM", "CHIN", "CHLH", "CHP", "CI", "CIC", "CLCV", "CLE", "CMN", "CPSC", "CS",
+        "CSE", "CW", "CWL", "CZCH", "DANC", "DTX", "EALC", "ECE", "ECON", "EDPR", "EDUC", "EIL", "ENG", "ENGL", "ENSU", "ENT",
+        "ENVS", "EPOL", "EPSY", "ERAM", "ESE", "ESL", "EURO", "FAA", "FIN", "FLTE", "FR", "FSHN", "GC", "GEOG", "GEOL", "GER",
+        "GLBL", "GMC", "GRK", "GRKM", "GS", "GSD", "GWS", "HDFS", "HEBR", "HIST", "HNDI", "HORT", "HT", "HUM", "IB", "IE", "IHLT",
+        "INFO", "IS", "ITAL", "JAPN", "JOUR", "JS", "KIN", "KOR", "LA", "LAS", "LAST", "LAT", "LAW", "LCTL", "LEAD", "LER", "LING",
+        "LLS", "MACS", "MATH", "MBA", "MCB", "MDIA", "MDVL", "ME", "MFST", "MICR", "MILS", "MIP", "MSE", "MUS", "MUSC", "MUSE",
+        "NE", "NEUR", "NPRE", "NRES", "NS", "NUTR", "PATH", "PBIO", "PERS", "PHIL", "PHYS", "PLPA", "POL", "PORT", "PS", "PSM",
+        "PSYC", "QUEC", "REES", "REHB", "REL", "RHET", "RMLG", "RSOC", "RST", "RUSS", "SAME", "SBC", "SCAN", "SE", "SHS", "SLAV",
+        "SOC", "SOCW", "SPAN", "SPED", "STAT", "SWAH", "TAM", "TE", "THEA", "TMGT", "TRST", "TSM", "TURK", "UKR", "UP", "VCM",
+        "VM", "WGGP", "WLOF", "WRIT", "YDSH"};
+        private readonly string name = "1920s to Today 19thC Sp American Studies 20thC World from Midcentury 21st Century Dramaturgy History Judaism " +
+            "Mathematical World Systems-Based Approach to the Operation of Livestock-Based Food Production System ABE Principles Bioenvironment " +
+            "Biological Bioprocessing Abstract Linear Algebra Academic Presentation Skills Progress Accelerated Chemistry Lab Fundementals Algorithms " +
+            "Computing Accounting Analysis Analytics Applications Accountancy Control Systems Financial Institutions Regulation Measurement Reporting Control " +
+            "ACES Study Abroad Transfer Orientation ";
+        private readonly string IndexPath;
+        private readonly string DatasetFile;
+        
+
+        private TokenStream ts;
         private IOffsetAttribute offsetAtt;
         private ICharTermAttribute termAtt;
 
         public Indexer(string datasetfile, string indexPath)
         {
-            this.indexPath = indexPath;
-            this.datasetFile = datasetfile;
-            this._standardAnalyzer = new StandardAnalyzer(version);
-            this._directory = FSDirectory.Open(indexPath);
+            this.IndexPath = indexPath;
+            this.DatasetFile = datasetfile;
         }
 
-        public void myTokenizer() {
-            tokenStream = _standardAnalyzer.GetTokenStream("alltokens", File.ReadAllText(datasetFile));
-            offsetAtt = tokenStream.AddAttribute<IOffsetAttribute>();
-            termAtt = tokenStream.AddAttribute<ICharTermAttribute>();
+        /// <summary>
+        /// Reads all text from the file and creates a token stream.
+        /// </summary>
+        public void myTokenizer()
+        {    
+            var Analyzer = new StandardAnalyzer(version);
+            ts = Analyzer.GetTokenStream("alltokens", File.ReadAllText(DatasetFile));
+            offsetAtt = ts.AddAttribute<IOffsetAttribute>();
+            termAtt = ts.AddAttribute<ICharTermAttribute>();
+            Analyzer.Dispose();
         }
 
         public void CreateIndex()
         {
-            using var dir = _directory;
-            //Adds a field to index;
-            //document.Add(new StringField("Year", "2022", Field.Store.YES));
-           /* using var dir = FSDirectory.Open(indexPath);
-
-            var indexConfig = new IndexWriterConfig(version, _standardAnalyzer);
-
-            using var writer = new IndexWriter(dir, indexConfig);
-
-
-            var doc = new Document();
-            doc.Add(new TextField("testfield", "stringvalue", Field.Store.YES));
-            writer.AddDocument(doc);
-            writer.Flush(triggerMerge: true, applyAllDeletes: true);*/
-
+            
         }
+        //Analyzer
         public void testing() {
+            using var dir = FSDirectory.Open(IndexPath);
+            var Analyzer = new StandardAnalyzer(version);
+            var IndexConfig = new IndexWriterConfig(version, Analyzer);
+            using var writer = new IndexWriter(dir, IndexConfig);
+
+            
+
             try
             {
-                tokenStream.Reset();
-                while (tokenStream.IncrementToken())
+                ts.Reset();
+                
+                while (ts.IncrementToken())
                 {
-                    Console.WriteLine("token: " + tokenStream.ReflectAsString(true));
-                    Console.WriteLine("Term: " +termAtt.ToString());
+                    var document = new Document();
+                    Console.WriteLine("Added: "+ termAtt.ToString());
+                    /*Console.WriteLine("token: " + ts.ReflectAsString(false));
+                    Console.WriteLine("Term: " + termAtt.ToString());
                     Console.WriteLine("token start offset: " + offsetAtt.StartOffset);
-                    Console.WriteLine("  token end offset: " + offsetAtt.EndOffset);
+                    Console.WriteLine("  token end offset: " + offsetAtt.EndOffset);*/
+
+                    /*if (termAtt.ToString() == year)
+                    {
+                        document.Add(new TextField("Year", termAtt.ToString(), Field.Store.YES));
+                    }
+                    else if (yearterm.Contains(termAtt.ToString()))
+                    {
+                        document.Add(new TextField("Term", termAtt.ToString(), Field.Store.YES));
+                    }
+                    else if (subject.Contains(termAtt.ToString().ToUpper()))
+                    {//saves subject code
+                        document.Add(new StringField("Subject", termAtt.ToString().ToUpper(), Field.Store.YES));
+                        Console.WriteLine("Before Saved: " + termAtt.ToString());
+                        //saves subject number
+                        ts.IncrementToken();
+                        
+                        Console.WriteLine("After saved: " + termAtt.ToString());
+                        document.Add(new StringField("Number", termAtt.ToString(), Field.Store.YES));
+                    }
+
+                    else if ()
+                    {
+
+                    }*/
+                    document.Add(new TextField("fieldname", termAtt.ToString(), Field.Store.YES));
+                    writer.AddDocument(document);
+                    //writer.Flush(false, false);
+                    writer.Commit();
                 }
                 //Console.WriteLine($"Standard analyzer stop word set: {StopWordSet}");
-                tokenStream.End();
+                ts.End();
             }
             finally
             {
-                tokenStream.Dispose();
+                
+                ts.Dispose();
             }
         }
 
-        public void addToIndex()
+        private bool checkSubject(string term)
         {
-            try
-            {
-                tokenStream.Reset();
-                var document = new Document();
-                while (tokenStream.IncrementToken()) {
-                    document.Add(new TextField("testing_term", termAtt.ToString(),Field.Store.NO));
-                }
-                
-            }
-            finally
-            {
-                _writer.Commit();
-                _writer.Flush(triggerMerge: true, applyAllDeletes: false);
-            }
+            return subject.Contains(term);
         }
+
     }
 }

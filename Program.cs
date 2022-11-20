@@ -8,7 +8,7 @@ namespace LuceneProject
     {
         const LuceneVersion AppLuceneVersion = LuceneVersion.LUCENE_48;
         //Dataset path
-        static readonly string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Dataset\2022-sp.csv");
+        static readonly string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Dataset\2022-sp - Copy.csv");
         static readonly string datasetFile = Path.GetFullPath(path);
         static string indexPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Index"));
         
