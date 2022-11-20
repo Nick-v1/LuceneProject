@@ -21,9 +21,15 @@ namespace LuceneProject
     public class Indexer
     {
         private const LuceneVersion version = LuceneVersion.LUCENE_48;
-        
-        private readonly string year = "2022";
+
+        /*private readonly string year = "2022";
         private readonly string yearterm = "2022-sp";
+
+        private readonly string name = "1920s to Today 19thC Sp American Studies 20thC World from Midcentury 21st Century Dramaturgy History Judaism " +
+            "Mathematical World Systems-Based Approach to the Operation of Livestock-Based Food Production System ABE Principles Bioenvironment " +
+            "Biological Bioprocessing Abstract Linear Algebra Academic Presentation Skills Progress Accelerated Chemistry Lab Fundementals Algorithms " +
+            "Computing Accounting Analysis Analytics Applications Accountancy Control Systems Financial Institutions Regulation Measurement Reporting Control " +
+            "ACES Study Abroad Transfer Orientation ";*/
         private readonly string[] subject = { "AAS" , "ABE", "ACCY", "ACE", "ACES", "ADV", "AE", "AFAS", "AFRO", "AFST",
         "AGCM", "AGED", "AHS", "AIS", "ALEC", "ANSC", "ANTH", "ARAB", "ARCH", "ART", "ARTD", "ARTE", "ARTF", "ARTH", "ARTJ",
         "ARTS", "ASRM", "ASST", "ASTR", "ATMS", "BADM", "BCOG", "BCS", "BDI", "BIOC", "BIOE", "BIOL", "BIOP", "BSE", "BTW",
@@ -37,11 +43,6 @@ namespace LuceneProject
         "PSYC", "QUEC", "REES", "REHB", "REL", "RHET", "RMLG", "RSOC", "RST", "RUSS", "SAME", "SBC", "SCAN", "SE", "SHS", "SLAV",
         "SOC", "SOCW", "SPAN", "SPED", "STAT", "SWAH", "TAM", "TE", "THEA", "TMGT", "TRST", "TSM", "TURK", "UKR", "UP", "VCM",
         "VM", "WGGP", "WLOF", "WRIT", "YDSH"};
-        private readonly string name = "1920s to Today 19thC Sp American Studies 20thC World from Midcentury 21st Century Dramaturgy History Judaism " +
-            "Mathematical World Systems-Based Approach to the Operation of Livestock-Based Food Production System ABE Principles Bioenvironment " +
-            "Biological Bioprocessing Abstract Linear Algebra Academic Presentation Skills Progress Accelerated Chemistry Lab Fundementals Algorithms " +
-            "Computing Accounting Analysis Analytics Applications Accountancy Control Systems Financial Institutions Regulation Measurement Reporting Control " +
-            "ACES Study Abroad Transfer Orientation ";
         private readonly string IndexPath;
         private readonly string DatasetFile;
         
@@ -68,19 +69,17 @@ namespace LuceneProject
             Analyzer.Dispose();
         }
 
-        public void CreateIndex()
-        {
-            
-        }
-        //Analyzer
-        public void testing() {
+        
+        /// <summary>
+        /// Creates the index with all data
+        /// </summary>
+        public void CreateIndex() {
             using var dir = FSDirectory.Open(IndexPath);
             var Analyzer = new StandardAnalyzer(version);
             var IndexConfig = new IndexWriterConfig(version, Analyzer);
             using var writer = new IndexWriter(dir, IndexConfig);
 
-            
-
+            IndexConfig.OpenMode = OpenMode.CREATE_OR_APPEND;
             try
             {
                 ts.Reset();
@@ -89,9 +88,9 @@ namespace LuceneProject
                 {
                     var document = new Document();
                     Console.WriteLine("Added: "+ termAtt.ToString());
-                    /*Console.WriteLine("token: " + ts.ReflectAsString(false));
-                    Console.WriteLine("Term: " + termAtt.ToString());
-                    Console.WriteLine("token start offset: " + offsetAtt.StartOffset);
+                   /* Console.WriteLine("token: " + ts.ReflectAsString(false));
+                    Console.WriteLine("Term: " + termAtt.ToString());*/
+                    /*Console.WriteLine("token start offset: " + offsetAtt.StartOffset);
                     Console.WriteLine("  token end offset: " + offsetAtt.EndOffset);*/
 
                     /*if (termAtt.ToString() == year)
@@ -118,11 +117,12 @@ namespace LuceneProject
 
                     }*/
                     document.Add(new TextField("fieldname", termAtt.ToString(), Field.Store.YES));
+                    
                     writer.AddDocument(document);
                     //writer.Flush(false, false);
                     writer.Commit();
                 }
-                //Console.WriteLine($"Standard analyzer stop word set: {StopWordSet}");
+                
                 ts.End();
             }
             finally

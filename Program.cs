@@ -1,42 +1,30 @@
-﻿using Lucene.Net.Util;
-using System;
+﻿using System;
 using System.IO;
 
 namespace LuceneProject
 {
     class Program
     {
-        const LuceneVersion AppLuceneVersion = LuceneVersion.LUCENE_48;
         //Dataset path
-        static readonly string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Dataset\2022-sp - Copy.csv");
+        static readonly string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Dataset\2022-sp.csv");
         static readonly string datasetFile = Path.GetFullPath(path);
         static string indexPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Index"));
-        
+
 
         private void Run()
         {
             fileCheck(datasetFile);
             
 
-
-
             var index = new Indexer(datasetFile, indexPath);
             index.myTokenizer();
-            index.testing();
+            index.CreateIndex();
             //index.CreateIndex();
 
             Console.WriteLine();
-           
+
         }
-
-
-
-
-
-
-
-
-
+        
 
 
         /// <summary>
@@ -60,15 +48,7 @@ namespace LuceneProject
             var self = new Program();
             self.Run();
         }
+
+        
     }
 }
-//Βήματα
-/*1.Η ανάλυση θα βασίζεται στις μετρικές tf-idf  
-2.Η αναζήτηση θα πρέπει να αγνοεί λέξεις που είναι πολύ κοινές και δεν συνεισφέρουν  στη σημασία του κειμένου (stop-words)  
-3.Η αναζήτηση θα πρέπει να λαμβάνει υπόψη τους όρους που περιλαμβάνονται στο  κείμενο, αφού πρώτα προβεί σε αποκοπή των καταλήξεων (stemming).  
-4.Η αναζήτηση θα μπορεί να κατευθυνθεί και σε άλλα πεδία πλην αυτών που  περιέχουν το κείμενο.  
-5.Θα υπάρχει δυνατότητα να ταξινομηθούν τα αποτελέσματα, είτε με βάση κάποιο  άλλο πεδίο (πλην του κειμένου), είτε με βάση την σχετικοτητα του κειμένου τους με το  ερώτημα.  
-6.Τα αποτελέσματα θα πρέπει να μπορούν να σελιδοποιηθούν με τρόπο  παραμετροποιήσιμο (τρέχουσα σελίδα, αριθμός αποτελεσμάτων ανά σελίδα)  
-7.Η σχετικότητα εκάστου εκ των αποτελεσμάτων θα μπορεί να εμπεριέχεται στα  αποτελέσματα ως αριθμός 
-8.Τα αποτελέσματα θα πρέπει να μπορούν να παρουσιάζουν επισημασμένες τις  εμφανίσεις των λέξεων που βρέθηκαν στο κείμενο  
-9.Θα μπορούν να παρέχονται πληροφορίες για το ευρετήριο, όπως ο αριθμός  εγγράφων και οι κορυφαίοι σε εμφανίσεις όροι.*/
