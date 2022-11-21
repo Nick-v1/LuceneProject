@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 
 namespace LuceneProject
 {
@@ -9,20 +10,27 @@ namespace LuceneProject
         static readonly string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Dataset\2022-sp.csv");
         static readonly string datasetFile = Path.GetFullPath(path);
         static string indexPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Index"));
-
+        static string indexPathFile = Path.GetFullPath(Path.Combine(indexPath, @"_0.cfs"));
 
         private void Run()
         {
             fileCheck(datasetFile);
 
             var index = new Indexer(datasetFile, indexPath);
-            //index.CreateIndex(10000);
-            index.SearchIndex();
+
+            if (!File.Exists(indexPathFile)) {
+                index.CreateIndex();
+            }
+
+            Console.Write("Query: ");
+            var query = Console.ReadLine();
+            Console.Write("Top results: ");
+            var TopResults = Console.ReadLine();
+            //search num top documents
+            index.SearchIndex(int.Parse(TopResults), query);
 
             Console.WriteLine("---------------------------------------------------------------------------------------------------------------\n\nEnd of program");
         }
-
-        
 
         /// <summary>
         /// Checks if file exists
@@ -32,13 +40,18 @@ namespace LuceneProject
         {
             if (File.Exists(dtfile))
             {
-                Console.WriteLine("Dataset file exists");
+                Console.WriteLine("Dataset file exists\n");
             }
             else
             {
-                Console.WriteLine("Dataset file not found");
+                Console.WriteLine("Dataset file not found\n");
+                Console.WriteLine("Exiting Program...");
+                Thread.Sleep(1000);
+                Environment.Exit(1);
             }
         }
+
+
         /// <summary>
         /// Entry point
         /// Initiates the app
@@ -49,7 +62,5 @@ namespace LuceneProject
             var self = new Program();
             self.Run();
         }
-
-        
     }
 }

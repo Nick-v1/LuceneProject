@@ -32,8 +32,7 @@ namespace LuceneProject
             this.DatasetFile = datasetfile;
         }
 
-        public void CreateIndex(int hitsPage) {
-            var hitsPerPage = hitsPage;
+        public void CreateIndex() {
             var AllTextList = File.ReadAllLines(DatasetFile);
             using var dir = FSDirectory.Open(IndexPath);
 
@@ -54,8 +53,8 @@ namespace LuceneProject
 
         }
 
-        public void SearchIndex() {
-            int hitsPerPage = 1000;
+        public void SearchIndex(int hpp, string QueryToSearch) {
+            int hitsPerPage = hpp;
 
             var Analyzer = new StandardAnalyzer(version);
 
@@ -64,15 +63,16 @@ namespace LuceneProject
 
             IndexSearcher isearcher = new IndexSearcher(ireader);
             //query to parse
-            Query query = new QueryParser(version, "Everything", Analyzer).Parse("intro");
+            Query query = new QueryParser(version, "Everything", Analyzer).Parse(QueryToSearch);
 
             var collector = TopScoreDocCollector.Create(hitsPerPage, true);
             isearcher.Search(query, collector);
 
             ScoreDoc[] hits = collector.GetTopDocs().ScoreDocs;
 
-            Console.WriteLine(hits.Length);
 
+            Console.WriteLine($"Documents found: {hits.Length}");
+            Console.WriteLine("Top Results\n-----------------------------------------------");
             foreach (var hit in hits)
             {
                 int docId = hit.Doc;
