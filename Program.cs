@@ -32,16 +32,20 @@ namespace LuceneProject
                 index.SearchIndex(int.Parse(TopResults), query);
 
 
-                Console.Write("Continue searching? (y/n): ");
+                Console.Write("\nContinue searching? (y/n): ");
                 var continueSearch = Console.ReadKey().Key.ToString();
 
                 if (continueSearch.Equals("N"))
+                {
+                    Console.WriteLine("\n\n---------------------------------------------------------------------------------------------------------------\n\nExiting program...");
+                    Thread.Sleep(2300);
                     Environment.Exit(1);
+                }
                 else
                     continue;
             }
 
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------------\n\nEnd of program");
+            
         }
 
         /// <summary>
