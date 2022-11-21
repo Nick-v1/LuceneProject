@@ -22,12 +22,24 @@ namespace LuceneProject
                 index.CreateIndex();
             }
 
-            Console.Write("Query: ");
-            var query = Console.ReadLine();
-            Console.Write("Results: ");
-            var TopResults = Console.ReadLine();
-            //search num top documents
-            index.SearchIndex(int.Parse(TopResults), query);
+            while (true)
+            {
+                Console.Write("\nQuery: ");
+                var query = Console.ReadLine();
+                Console.Write("Hits: ");
+                var TopResults = Console.ReadLine();
+                //search x top documents
+                index.SearchIndex(int.Parse(TopResults), query);
+
+
+                Console.Write("Continue searching? (y/n): ");
+                var continueSearch = Console.ReadKey().Key.ToString();
+
+                if (continueSearch.Equals("N"))
+                    Environment.Exit(1);
+                else
+                    continue;
+            }
 
             Console.WriteLine("---------------------------------------------------------------------------------------------------------------\n\nEnd of program");
         }

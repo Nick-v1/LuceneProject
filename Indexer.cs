@@ -1,5 +1,6 @@
 ﻿using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Core;
+using Lucene.Net.Analysis.En;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Analysis.TokenAttributes;
 using Lucene.Net.Analysis.Util;
@@ -64,22 +65,23 @@ namespace LuceneProject
             IndexSearcher isearcher = new IndexSearcher(ireader);
             //query to parse
             Query query = new QueryParser(version, "Everything", Analyzer).Parse(QueryToSearch);
-
+            
             var collector = TopScoreDocCollector.Create(hitsPerPage, true);
             isearcher.Search(query, collector);
-
             ScoreDoc[] hits = collector.GetTopDocs().ScoreDocs;
 
-
-            Console.WriteLine($"Documents found: {hits.Length}");
+            float meanScoreSum = 0.0f;
             Console.WriteLine("Top Results\n-----------------------------------------------");
             foreach (var hit in hits)
             {
                 int docId = hit.Doc;
                 Document d = isearcher.Doc(docId);
                 Console.WriteLine("Doc Id: " + hit.Doc + ". Score: " + hit.Score);
+                meanScoreSum += hit.Score;
             }
+            Console.WriteLine($"\nTotal hits: {hits.Length}, Max Score: {isearcher.Search(query, hitsPerPage).MaxScore}");
+            Console.WriteLine("Average relevance: " + meanScoreSum/hits.Length);
         }
-
+        
     }
 }
