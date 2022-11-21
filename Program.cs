@@ -24,7 +24,7 @@ namespace LuceneProject
 
             Console.Write("Query: ");
             var query = Console.ReadLine();
-            Console.Write("Top results: ");
+            Console.Write("Results: ");
             var TopResults = Console.ReadLine();
             //search num top documents
             index.SearchIndex(int.Parse(TopResults), query);
