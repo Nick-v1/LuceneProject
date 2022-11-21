@@ -17,10 +17,8 @@ namespace LuceneProject
             
 
             var index = new Indexer(datasetFile, indexPath);
-            index.myTokenizer();
             index.CreateIndex();
-            //index.CreateIndex();
-
+            
             Console.WriteLine();
 
         }
