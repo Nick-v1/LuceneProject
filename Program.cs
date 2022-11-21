@@ -18,8 +18,8 @@ namespace LuceneProject
             var index = new Indexer(datasetFile, indexPath);
             //index.CreateIndex(10000);
             index.SearchIndex();
-            Console.WriteLine();
 
+            Console.WriteLine("---------------------------------------------------------------------------------------------------------------\n\nEnd of program");
         }
 
         
