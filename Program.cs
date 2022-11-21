@@ -14,16 +14,15 @@ namespace LuceneProject
         private void Run()
         {
             fileCheck(datasetFile);
-            
 
             var index = new Indexer(datasetFile, indexPath);
-            index.CreateIndex();
-            
+            //index.CreateIndex(10000);
+            index.SearchIndex();
             Console.WriteLine();
 
         }
-        
 
+        
 
         /// <summary>
         /// Checks if file exists
@@ -32,9 +31,13 @@ namespace LuceneProject
         private void fileCheck(string dtfile)
         {
             if (File.Exists(dtfile))
+            {
                 Console.WriteLine("Dataset file exists");
+            }
             else
+            {
                 Console.WriteLine("Dataset file not found");
+            }
         }
         /// <summary>
         /// Entry point
