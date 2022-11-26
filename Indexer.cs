@@ -86,11 +86,14 @@ namespace LuceneProject
 
         /// <summary>
         /// Use this method to search the index
+        /// Calls collector to gather results and then writes out.
+        /// Average Score, Score of every hit, and some important results.
         /// </summary>
-        /// <param name="hpp"></param>
-        /// <param name="QueryToSearch"></param>
-        /// <param name="header"></param>
-        /*public void SearchIndex(int hpp, string QueryToSearch, string header) {
+        /// <param name="hpp">how many hits</param>
+        /// <param name="QueryToSearch">your query</param>
+        /// <param name="header">the header/title of the field</param>
+        public void SearchIndex(int hpp, string QueryToSearch, string header)
+        {
             int hitsPerPage = hpp;
 
             var Analyzer = new StandardAnalyzer(version);
@@ -101,12 +104,12 @@ namespace LuceneProject
             IndexSearcher isearcher = new IndexSearcher(ireader);
             //query to parse
             Query query = new QueryParser(version, header, Analyzer).Parse(QueryToSearch);
-            
+
             var collector = TopScoreDocCollector.Create(hitsPerPage, true);
             isearcher.Search(query, collector);
             ScoreDoc[] hits = collector.GetTopDocs().ScoreDocs;
-            
-           
+
+
 
             float meanScoreSum = 0.0f;
             Console.WriteLine("Top Results\n-----------------------------------------------");
@@ -114,17 +117,24 @@ namespace LuceneProject
             {
                 int docId = hit.Doc;
                 Document d = isearcher.Doc(docId);
-                
-                Console.WriteLine("Doc Id: " + hit.Doc + ". Score: " + hit.Score);
-                Console.WriteLine(d);
+
+                Console.WriteLine("Doc Id: " + hit.Doc + ". Score: " + hit.Score + "\n___________________________________________");
+                Console.WriteLine($"Subject code: {d.Get("Subject")}\nNumber: {d.Get("Number")}\nSubject name: {d.Get("Name")}\n" +
+                    
+                    $"Enrollment Status: {d.Get("Enrollment Status")}\n" +
+                    $"Type: {d.Get("Type")}\n" +
+                    $"Type Code: {d.Get("Type Code")}\n" +
+                    $"Start: {d.Get("Start Time")}\n" +
+                    $"End: {d.Get("End Time")}\n");
                 meanScoreSum += hit.Score;
             }
             Console.WriteLine($"\nTotal hits: {hits.Length}, Max Score: {isearcher.Search(query, hitsPerPage).MaxScore}");
-            Console.WriteLine("Average relevance: " + meanScoreSum/hits.Length);
-        }*/
-        public void SearchIndexTest(int hpp)
+            Console.WriteLine("Average relevance: " + meanScoreSum / hits.Length);
+        }
+
+        public void SearchIndexExample()
         {
-            int hitsPerPage = hpp;
+            int hitsPerPage = 100;
 
             var Analyzer = new StandardAnalyzer(version);
 
@@ -133,7 +143,7 @@ namespace LuceneProject
 
             IndexSearcher isearcher = new IndexSearcher(ireader);
             //query to parse. version, header to search, analyzer, query to search.
-            Query query = new QueryParser(version, "Description", Analyzer).Parse("intro");
+            Query query = new QueryParser(version, "Description", Analyzer).Parse("Programming");
 
             var collector = TopScoreDocCollector.Create(hitsPerPage, true);
             isearcher.Search(query, collector);
@@ -142,15 +152,20 @@ namespace LuceneProject
 
 
             float meanScoreSum = 0.0f;
-            Console.WriteLine("Top Results\n-----------------------------------------------");
+            Console.WriteLine("Top Results\n-------------------------------------------------------------------------");
             foreach (var hit in hits)
             {
                 int docId = hit.Doc;
                 Document d = isearcher.Doc(docId);
 
-                Console.WriteLine("Doc Id: " + hit.Doc + ". Score: " + hit.Score);
+                Console.WriteLine("Doc Id: " + hit.Doc + ". Score: " + hit.Score + "\n___________________________________________");
                 Console.WriteLine($"Subject code: {d.Get("Subject")}\nNumber: {d.Get("Number")}\nSubject name: {d.Get("Name")}\n" +
-                    $"Description: {d.Get("Description")}");
+                    $"Credit Hours: {d.Get("Credit Hours")}\n" +
+                    $"Enrollment Status: {d.Get("Enrollment Status")}\n" +
+                    $"Type: {d.Get("Type")}\n" +
+                    $"Type Code: {d.Get("Type Code")}\n" +
+                    $"Start: {d.Get("Start Time")}\n" +
+                    $"End: {d.Get("End Time")}\n");
                 meanScoreSum += hit.Score;
             }
             Console.WriteLine($"\nTotal hits: {hits.Length}, Max Score: {isearcher.Search(query, hitsPerPage).MaxScore}");
