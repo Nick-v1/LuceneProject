@@ -21,15 +21,23 @@ namespace LuceneProject
             if (!File.Exists(indexPathFile)) {
                 index.CreateIndex();
             }
-
-            while (true)
+            else
+            {
+                Console.WriteLine("Index already exists!");
+            }
+            index.SearchIndexTest(100);
+            /*while (true)
             {
                 Console.Write("\nQuery: ");
                 var query = Console.ReadLine();
+
                 Console.Write("Hits: ");
                 var TopResults = Console.ReadLine();
+
+                Console.Write("Header: ");
+                var header = Console.ReadLine();
                 //search x top documents
-                index.SearchIndex(int.Parse(TopResults), query);
+                index.SearchIndex(int.Parse(TopResults), query, header);
 
 
                 Console.Write("\nContinue searching? (y/n): ");
@@ -43,9 +51,9 @@ namespace LuceneProject
                 }
                 else
                     continue;
-            }
+            }*/
 
-            
+
         }
 
         /// <summary>

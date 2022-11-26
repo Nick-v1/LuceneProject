@@ -7,4 +7,4 @@ Data File: 2022-sp.csv
 
 
 
-Technologies/Frameworks: .Net Core 5, C#, Rest API.
+Technologies/Frameworks: Lucene Net, .Net Core 5, CsvHelper, C#, Rest API.
