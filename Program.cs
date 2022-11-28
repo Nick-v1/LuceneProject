@@ -2,6 +2,10 @@
 using System.IO;
 using System.Threading;
 
+/// <summary>
+/// This is a stand alone project
+/// Client and server is implement on another project of the same solution
+/// </summary>
 namespace LuceneProject
 {
     class Program
