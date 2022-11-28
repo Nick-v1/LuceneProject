@@ -22,7 +22,7 @@ namespace LuceneProject
                 index.CreateIndex();
             }
 
-            //index.SearchIndexMultiQuery(10,"Interdisciplinary introduction to the basic concepts and approaches");
+            //index.SearchIndexExample();
             while (true)
             {
                 Console.Write("Choose betweeen Advanced or General\nSearch Type: ");
