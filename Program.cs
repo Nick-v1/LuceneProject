@@ -21,36 +21,60 @@ namespace LuceneProject
             if (!File.Exists(indexPathFile)) {
                 index.CreateIndex();
             }
-            
 
+            //index.SearchIndexMultiQuery(10,"Interdisciplinary introduction to the basic concepts and approaches");
             while (true)
             {
-                Console.Write("Header: (Choose between: Subject, Number, Name, Description" +
+                Console.Write("Choose betweeen Advanced or General\nSearch Type: ");
+                var searchType = Console.ReadLine().Trim().ToLower();
+
+                if (searchType.Equals("advanced")) {
+                    Console.Write("Header: (Choose between: Subject, Number, Name, Description" +
                     ", CRN, or Enrollment Status): ");
-                var header = Console.ReadLine();
+                    var header = Console.ReadLine();
 
-                Console.Write("\nQuery: ");
-                var query = Console.ReadLine();
+                    Console.Write("\nQuery: ");
+                    var query = Console.ReadLine();
 
-                Console.Write("Hits: ");
-                var TopResults = Console.ReadLine();
+                    Console.Write("Hits: ");
+                    var TopResults = Console.ReadLine();
 
-                //search x top documents
-                index.SearchIndex(int.Parse(TopResults), query, header);
+                    //search x top documents
+                    index.SearchIndexSpecific(int.Parse(TopResults), query, header);
 
+                    Console.Write("\nContinue searching? (y/n): ");
+                    var continueSearch = Console.ReadKey().Key.ToString();
+                    Console.WriteLine("\n");
 
-                Console.Write("\nContinue searching? (y/n): ");
-                var continueSearch = Console.ReadKey().Key.ToString();
-                Console.WriteLine("\n");
-
-                if (continueSearch.Equals("N"))
-                {
-                    Console.WriteLine("\n\n---------------------------------------------------------------------------------------------------------------\n\nExiting program...");
-                    Thread.Sleep(2300);
-                    Environment.Exit(1);
+                    if (continueSearch.Equals("N"))
+                    {
+                        Console.WriteLine("\n\n---------------------------------------------------------------------------------------------------------------\n\nExiting program...");
+                        Thread.Sleep(2300);
+                        Environment.Exit(1);
+                    }
+                    else
+                        continue;
                 }
-                else
-                    continue;
+                else if (searchType.Equals("general")) {
+                    Console.Write("\nQuery: ");
+                    var query = Console.ReadLine();
+
+                    Console.Write("Hits: ");
+                    var resultNum = Console.ReadLine();
+
+                    index.SearchIndexMultiQuery(int.Parse(resultNum), query);
+
+                    Console.Write("\nContinue searching? (y/n): ");
+                    var continueSearch = Console.ReadKey().Key.ToString();
+                    Console.WriteLine("\n");
+
+                    if (continueSearch.Equals("N"))
+                    {
+                        Console.WriteLine("\n\n---------------------------------------------------------------------------------------------------------------\n\nExiting program...");
+                        Thread.Sleep(2000);
+                        Environment.Exit(1);
+                    }
+                }
             }
 
             //example call

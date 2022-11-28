@@ -92,7 +92,7 @@ namespace LuceneProject
         /// <param name="hpp">how many hits</param>
         /// <param name="QueryToSearch">your query</param>
         /// <param name="header">the header/title of the field</param>
-        public void SearchIndex(int hpp, string QueryToSearch, string header)
+        public void SearchIndexSpecific(int hpp, string QueryToSearch, string header)
         {
             int hitsPerPage = hpp;
 
@@ -129,6 +129,45 @@ namespace LuceneProject
                 meanScoreSum += hit.Score;
             }
             Console.WriteLine($"\nTotal hits: {hits.Length}, Max Score: {isearcher.Search(query, hitsPerPage).MaxScore}");
+            Console.WriteLine("Average relevance: " + meanScoreSum / hits.Length);
+        }
+
+        public void SearchIndexMultiQuery(int numHits, string question) 
+        {
+            var Analyzer = new StandardAnalyzer(version);
+
+            using var dir = FSDirectory.Open(IndexPath);
+            using DirectoryReader ireader = DirectoryReader.Open(dir);
+
+            IndexSearcher isearcher = new IndexSearcher(ireader);
+
+            var headers = new string[] { "Subject", "Number", "Name", "Description", "Enrollment Status" };
+            
+            Query query = new MultiFieldQueryParser(version, headers, Analyzer).Parse(question);
+
+            
+            var collector = TopScoreDocCollector.Create(numHits, true);
+            isearcher.Search(query, collector);
+            ScoreDoc[] hits = collector.GetTopDocs().ScoreDocs;
+
+            float meanScoreSum = 0.0f;
+            Console.WriteLine("Top Results\n-----------------------------------------------");
+            foreach (var hit in hits)
+            {
+                int docId = hit.Doc;
+                Document d = isearcher.Doc(docId);
+
+                Console.WriteLine("Doc Id: " + hit.Doc + ". Score: " + hit.Score + "\n___________________________________________");
+                Console.WriteLine($"Subject code: {d.Get("Subject")}\nNumber: {d.Get("Number")}\nSubject name: {d.Get("Name")}\n" +
+
+                    $"Enrollment Status: {d.Get("Enrollment Status")}\n" +
+                    $"Type: {d.Get("Type")}\n" +
+                    $"Type Code: {d.Get("Type Code")}\n" +
+                    $"Start: {d.Get("Start Time")}\n" +
+                    $"End: {d.Get("End Time")}\n");
+                meanScoreSum += hit.Score;
+            }
+            Console.WriteLine($"\nTotal hits: {hits.Length}, Max Score: {isearcher.Search(query, numHits).MaxScore}");
             Console.WriteLine("Average relevance: " + meanScoreSum / hits.Length);
         }
 
