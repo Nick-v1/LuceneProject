@@ -37,6 +37,14 @@ namespace Server.Controllers
             }
         }
 
-
+        [HttpPost]
+        [Route("QueryEverything")]
+        public ActionResult<IEnumerable<Course>> QueryingGeneral([FromQuery] int hpp, [FromQuery] string queryForLucene)
+        {
+            lock (indexer) {
+                var result = logic.QueryProcessEverything(hpp, indexer, queryForLucene);
+                return Ok(result);
+            }
+        }
     }
 }

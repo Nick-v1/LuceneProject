@@ -170,7 +170,7 @@ namespace Server
             return courses.ToArray();
         }
 
-        public void SearchIndexMultiQuery(int numHits, string question)
+        public IEnumerable<Course> SearchIndexMultiQuery(int numHits, string question)
         {
             var Analyzer = new StandardAnalyzer(version);
 
@@ -188,25 +188,53 @@ namespace Server
             isearcher.Search(query, collector);
             ScoreDoc[] hits = collector.GetTopDocs().ScoreDocs;
 
+            var courses = new List<Course>();
+
             float meanScoreSum = 0.0f;
             Console.WriteLine("Top Results\n-----------------------------------------------");
             foreach (var hit in hits)
             {
                 int docId = hit.Doc;
                 Document d = isearcher.Doc(docId);
+                Course course = new Course();
 
-                Console.WriteLine("Doc Id: " + hit.Doc + ". Score: " + hit.Score + "\n___________________________________________");
-                Console.WriteLine($"Subject code: {d.Get("Subject")}\nNumber: {d.Get("Number")}\nSubject name: {d.Get("Name")}\n" +
+                course.Building = d.Get("Building");
+                course.CreditHours = d.Get("Credit Hours");
+                course.CRN = int.Parse(d.Get("CRN"));
+                course.DaysofWeek = d.Get("Days of Week");
+                course.DegreeAttributes = d.Get("Degree Attributes");
+                course.Description = d.Get("Description");
+                course.EndTime = d.Get("End Time");
+                course.EnrollmentStatus = d.Get("Enrollment Status");
+                course.Instructors = d.Get("Instructors");
+                course.Name = d.Get("Name");
+                course.Number = int.Parse(d.Get("Number"));
+                course.PartofTerm = d.Get("Part of Term");
+                course.Room = d.Get("Room");
+                course.ScheduleInformation = d.Get("Schedule Information");
+                course.Section = d.Get("Section");
+                course.SectionCreditHours = d.Get("Section Credit Hours");
+                course.SectionInfo = d.Get("Section Status");
+                course.SectionStatus = d.Get("Section Status");
+                course.SectionTitle = d.Get("Section Title");
+                course.StartTime = d.Get("Start Time");
+                course.StatusCode = d.Get("Status Code");
+                course.Subject = d.Get("Subject");
+                course.Term = d.Get("Term");
+                course.Type = d.Get("Type");
+                course.TypeCode = d.Get("Type Code");
+                course.Year = int.Parse(d.Get("Year"));
+                course.YearTerm = d.Get("YearTerm");
 
-                    $"Enrollment Status: {d.Get("Enrollment Status")}\n" +
-                    $"Type: {d.Get("Type")}\n" +
-                    $"Type Code: {d.Get("Type Code")}\n" +
-                    $"Start: {d.Get("Start Time")}\n" +
-                    $"End: {d.Get("End Time")}\n");
+                courses.Add(course);
+
                 meanScoreSum += hit.Score;
+                log.Info(docId + ". " + "CRN: " + d.Get("CRN"));
             }
-            Console.WriteLine($"\nTotal hits: {hits.Length}, Max Score: {isearcher.Search(query, numHits).MaxScore}");
-            Console.WriteLine("Average relevance: " + meanScoreSum / hits.Length);
+            log.Info($"\nTotal hits: {hits.Length}, Max Score: {isearcher.Search(query, numHits).MaxScore}");
+            log.Info("Average relevance: " + meanScoreSum / hits.Length);
+
+            return courses.ToArray();
         }
 
         public void SearchIndexExample()
