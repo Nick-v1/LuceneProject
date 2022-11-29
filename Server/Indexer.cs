@@ -170,6 +170,12 @@ namespace Server
             return courses.ToArray();
         }
 
+        /// <summary>
+        /// Searching all index with the headers mentioned below.
+        /// </summary>
+        /// <param name="numHits">hits</param>
+        /// <param name="question">query for lucene</param>
+        /// <returns></returns>
         public IEnumerable<Course> SearchIndexMultiQuery(int numHits, string question)
         {
             var Analyzer = new StandardAnalyzer(version);

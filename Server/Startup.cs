@@ -27,6 +27,7 @@ namespace Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(opts => opts.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Latest);
+
             services.AddSwaggerDocument(config => {
                 config.PostProcess = document =>
                 {

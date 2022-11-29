@@ -1,12 +1,5 @@
-﻿using Lucene.Net.Analysis.Standard;
-using Lucene.Net.Documents;
-using Lucene.Net.Index;
-using Lucene.Net.QueryParsers.Classic;
-using NLog;
-using System;
+﻿using NLog;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Server
 {
