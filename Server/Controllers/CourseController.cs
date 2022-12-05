@@ -22,7 +22,7 @@ namespace Server.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("Query")]
         public ActionResult<IEnumerable<Course>> QueryingSpecific([FromQuery] int hpp, [FromQuery] string queryForLucene, [FromQuery] string header)
         {
@@ -32,7 +32,7 @@ namespace Server.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("QueryEverything")]
         public ActionResult<IEnumerable<Course>> QueryingGeneral([FromQuery] int hpp, [FromQuery] string queryForLucene)
         {

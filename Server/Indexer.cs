@@ -162,7 +162,7 @@ namespace Server
                 courses.Add(course);
 
                 meanScoreSum += hit.Score;
-                log.Info(docId + ". " + "CRN: " +d.Get("CRN"));
+                log.Info(docId + ". " + "CRN: " +d.Get("CRN") + ". Score: " + hit.Score);
             }
             
             log.Info($"\nTotal hits: {hits.Length}, Max Score: {isearcher.Search(query, hitsPerPage).MaxScore}");
@@ -235,7 +235,7 @@ namespace Server
                 courses.Add(course);
 
                 meanScoreSum += hit.Score;
-                log.Info(docId + ". " + "CRN: " + d.Get("CRN"));
+                log.Info(docId + ". " + "CRN: " + d.Get("CRN") + ". Score: "+hit.Score);
             }
             log.Info($"\nTotal hits: {hits.Length}, Max Score: {isearcher.Search(query, numHits).MaxScore}");
             log.Info("Average relevance: " + meanScoreSum / hits.Length);
