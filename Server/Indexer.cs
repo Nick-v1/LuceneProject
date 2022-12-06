@@ -243,44 +243,5 @@ namespace Server
             return courses.ToArray();
         }
 
-        public void SearchIndexExample()
-        {
-            int hitsPerPage = 100;
-
-            var Analyzer = new StandardAnalyzer(version);
-
-            using var dir = FSDirectory.Open(IndexPath);
-            using DirectoryReader ireader = DirectoryReader.Open(dir);
-
-            IndexSearcher isearcher = new IndexSearcher(ireader);
-            //query to parse. version, header to search, analyzer, query to search.
-            Query query = new QueryParser(version, "Description", Analyzer).Parse("Programming");
-
-            var collector = TopScoreDocCollector.Create(hitsPerPage, true);
-            isearcher.Search(query, collector);
-            ScoreDoc[] hits = collector.GetTopDocs().ScoreDocs;
-
-
-
-            float meanScoreSum = 0.0f;
-            Console.WriteLine("Top Results\n-------------------------------------------------------------------------");
-            foreach (var hit in hits)
-            {
-                int docId = hit.Doc;
-                Document d = isearcher.Doc(docId);
-
-                Console.WriteLine("Doc Id: " + hit.Doc + ". Score: " + hit.Score + "\n___________________________________________");
-                Console.WriteLine($"Subject code: {d.Get("Subject")}\nNumber: {d.Get("Number")}\nSubject name: {d.Get("Name")}\n" +
-                    $"Credit Hours: {d.Get("Credit Hours")}\n" +
-                    $"Enrollment Status: {d.Get("Enrollment Status")}\n" +
-                    $"Type: {d.Get("Type")}\n" +
-                    $"Type Code: {d.Get("Type Code")}\n" +
-                    $"Start: {d.Get("Start Time")}\n" +
-                    $"End: {d.Get("End Time")}\n");
-                meanScoreSum += hit.Score;
-            }
-            Console.WriteLine($"\nTotal hits: {hits.Length}, Max Score: {isearcher.Search(query, hitsPerPage).MaxScore}");
-            Console.WriteLine("Average relevance: " + meanScoreSum / hits.Length);
-        }
     }
 }

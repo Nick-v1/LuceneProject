@@ -25,14 +25,15 @@ namespace LuceneProject
             if (!File.Exists(indexPathFile)) {
                 index.CreateIndex();
             }
-
+            
             //index.SearchIndexExample();
             while (true)
             {
                 Console.Write("Choose betweeen Advanced or General\nSearch Type: ");
                 var searchType = Console.ReadLine().Trim().ToLower();
 
-                if (searchType.Equals("advanced")) {
+                if (searchType.Equals("advanced"))
+                {
                     Console.Write("Header: (Choose between: Subject, Number, Name, Description" +
                     ", CRN, or Enrollment Status): ");
                     var header = Console.ReadLine();
@@ -59,7 +60,8 @@ namespace LuceneProject
                     else
                         continue;
                 }
-                else if (searchType.Equals("general")) {
+                else if (searchType.Equals("general"))
+                {
                     Console.Write("\nQuery: ");
                     var query = Console.ReadLine();
 
@@ -80,9 +82,6 @@ namespace LuceneProject
                     }
                 }
             }
-
-            //example call
-            //index.SearchIndexExample();
         }
 
         /// <summary>
